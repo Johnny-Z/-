@@ -175,6 +175,29 @@ if ('toString' in obj) {
 }
 ```
 
+检查某个键名是否存在的运算符`in`，适用于对象，**也适用于数组**。
+
+```
+var arr = [ 'a', 'b', 'c' ];
+2 in arr  // true
+'2' in arr // true
+4 in arr // false
+```
+
+上面代码表明，数组存在键名为`2`的键。由于键名都是字符串，所以数值`2`会自动转成字符串。
+
+注意，如果数组的某个位置是空位，`in`运算符返回`false`。
+
+```
+var arr = [];
+arr[100] = 'a';
+
+100 in arr // true
+1 in arr // false
+```
+
+上面代码中，数组`arr`只有一个成员`arr[100]`，其他位置的键名都会返回`false`。
+
 ### for...in 循环
 
 `for...in`循环用来遍历一个对象的全部属性。
@@ -225,6 +248,73 @@ for (var key in person) {
   }
 }
 // name
+```
+
+**`for...in`循环不仅可以遍历对象，也可以遍历数组，毕竟数组只是一种特殊对象。**
+
+```
+var a = [1, 2, 3];
+
+for (var i in a) {
+  console.log(a[i]);
+}
+// 1
+// 2
+// 3
+```
+
+但是，`for...in`不仅会遍历数组所有的数字键，还会遍历非数字键。
+
+```
+var a = [1, 2, 3];
+a.foo = true;
+
+for (var key in a) {
+  console.log(key);
+}
+// 0
+// 1
+// 2
+// foo
+```
+
+上面代码在遍历数组时，也遍历到了非整数键`foo`。所以，不推荐使用`for...in`遍历数组。
+
+数组的遍历可以考虑使用`for`循环或`while`循环。
+
+```
+var a = [1, 2, 3];
+
+// for循环
+for(var i = 0; i < a.length; i++) {
+  console.log(a[i]);
+}
+
+// while循环
+var i = 0;
+while (i < a.length) {
+  console.log(a[i]);
+  i++;
+}
+
+var l = a.length;
+while (l--) {
+  console.log(a[l]);
+}
+```
+
+上面代码是三种遍历数组的写法。最后一种写法是逆向遍历，即从最后一个元素向第一个元素遍历。
+
+数组的`forEach`方法，也可以用来遍历数组，详见《标准库》的 Array 对象一章。
+
+```
+var colors = ['red', 'green', 'blue'];
+colors.forEach(function (color) {
+  console.log(color);
+});
+// red
+// green
+// blue
 ```
 
 ## 函数的声明
@@ -724,6 +814,28 @@ storeData(tmp);
 ```
 
 上面代码中，写法二比写法一更好，因为完全避免了污染全局变量。
+
+## console.log
+
+`console.log`方法支持以下占位符，不同类型的数据必须使用对应的占位符。
+
+- `%s` 字符串
+- `%d` 整数
+- `%i` 整数
+- `%f` 浮点数
+- `%o` 对象的链接
+- `%c` CSS 格式字符串
+
+使用`%c`占位符时，对应的参数必须是 CSS 代码，用来对输出内容进行 CSS 渲染。
+
+```
+console.log(
+  '%cThis text is styled!',
+  'color: red; background: yellow; font-size: 24px;'
+)
+```
+
+上面代码运行后，输出的内容将显示为黄底红字。
 
 
 
